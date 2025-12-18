@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamedev Canvas Workshop</title>
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        canvas {
+            background: #eee;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="480" height="320"></canvas>
+
+    <script>
+        const canvas = document.getElementById("myCanvas") ;
+        const ctx = canvas.getContext("2d") ;
+        const paddleHeight = 10 ;
+        const paddleWidth = 75 ;
+        const ballRadius = 10 ;
+
+        let paddleX = (canvas.width - paddleWidth) / 2 ;
+
+        let rightpressed = false ;
+        let leftpressed = false ;
+
+        var x = canvas.width / 2 ;
+        var y = canvas.height - 30 ;
+
+        var dx = 2 ;
+        var dy = -2 ;
+
+        
+
+        function drawBall() {
+            ctx.beginPath() ;
+            ctx.arc(x, y, ballRadius, 0, Math.PI * 2) ;
+            ctx.fillStyle = "#0095dd" ;
+            ctx.fill() ;
+            ctx.closePath() ;
+        }
+
+        function drawPaddle() {
+            ctx.beginPath() ;
+            ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight) ;
+            ctx.fillStyle = "#0095DD" ;
+            ctx.fill() ;
+            ctx.closePath() ;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawBall() ;  //関数の呼び出し
+            drawPaddle() ;
+
+            // ボールの画面左右の端で跳ね返る衝突検出(Collision Detection)
+            if(x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+                dx = -dx ;
+            }
+
+            if(y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+                dy = -dy ;
+            }
+
+            x += dx ;
+            y += dy ;
+        }
+        
+        document.addEventListener("keydown", keyDownHandler, false) ;
+
+        function keyDownHandler(e) {
+            if(e.key === "Right" || e.key === "Allowright") {
+                rightpressed = true ;
+            } else if(e.key === "Left" || e.key ==="Allowleft") {
+                leftpressed = true ;
+            }
+        }
+
+        document.addEventListener("keyup", keyUpHandler, false) ;
+
+        function keyUpHandler(e) {
+            if(e.key === "Right" || e.key === "Allowright") {
+                rightpressed = false ;
+            } else if (e.key === "Left" || e.key === "Allowleft") {
+                leftpressed = false ;
+            }
+        }
+        setInterval(draw, 10) ;
+
+    </script>
+
+    
+</body>
+</html>
